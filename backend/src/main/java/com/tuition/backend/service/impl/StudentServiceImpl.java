@@ -5,6 +5,7 @@ import com.tuition.backend.dto.response.ResponseStudentDto;
 import com.tuition.backend.dto.response.paginated.StudentPaginatedDto;
 import com.tuition.backend.entity.Student;
 import com.tuition.backend.exception.AlreadyExistsException;
+import com.tuition.backend.exception.NotFoundException;
 import com.tuition.backend.repo.StudentRepository;
 import com.tuition.backend.service.StudentService;
 import com.tuition.backend.util.StudentMapper;
@@ -12,6 +13,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +41,11 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public ResponseStudentDto getStudentById(long id) {
-        return null;
+        Optional<Student> selectedStudent = studentRepository.findById(id);
+        if (selectedStudent.isPresent()) {
+            return studentMapper.toResponseStudentDto(selectedStudent.get());
+        }
+        throw new NotFoundException("Student not found for ID: " + id);
     }
 
     @Override
