@@ -5,6 +5,7 @@ import com.tuition.backend.dto.response.ResponseStudentDto;
 import com.tuition.backend.service.StudentService;
 import com.tuition.backend.util.StandardResponse;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,17 @@ public class StudentController {
         return new ResponseEntity<>(
                 new StandardResponse(201, "Student Created Successfully!", savedStudent),
                 HttpStatus.CREATED
+        );
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<StandardResponse> getStudentById(
+            @PathVariable @Min(value = 1, message = "ID must be greater than 0") long id) {
+
+        ResponseStudentDto student = studentService.getStudentById(id);
+        return new ResponseEntity<>(
+                new StandardResponse(200, "Student Fetched Successfully!", student),
+                HttpStatus.OK
         );
     }
 }
