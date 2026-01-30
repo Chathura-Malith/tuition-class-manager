@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -87,6 +88,15 @@ public class AppWideExceptionHandler {
         return new ResponseEntity<>(
                 new StandardResponse(400, "Validation Error", e.toString().trim()),
                 HttpStatus.BAD_REQUEST
+        );
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<StandardResponse> handleNoResourceFoundException(NoResourceFoundException e) {
+        return new ResponseEntity<>(
+                new StandardResponse(404, "Endpoint Not Found",
+                        "The requested path was not found. Did you forget the ID?"),
+                HttpStatus.NOT_FOUND
         );
     }
 
